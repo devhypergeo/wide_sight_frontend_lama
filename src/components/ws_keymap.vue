@@ -1,12 +1,11 @@
-
 <template>
     <div id="keymap_panel">
-    <div ref="iconPanelOpen" v-on:click="showMapPanel = !showMapPanel" class="iconPanel iconOpen" v-bind:class="{ active: showMapPanel }">
-        <i class="fas fa-map"></i>
-    </div>
-    <div ref="iconPanelClose" v-if="showMapPanel" v-on:click="showMapPanel = false" class="iconPanel iconClose">
-        <i class="far fa-times-circle"></i>
-    </div>
+        <div ref="iconPanelOpen" v-on:click="showMapPanel = !showMapPanel" class="iconPanel iconOpen" v-bind:class="{ active: showMapPanel }">
+            <font-awesome-icon icon="map" />
+        </div>
+        <div ref="iconPanelClose" v-if="showMapPanel" v-on:click="showMapPanel = false" class="iconPanel iconClose">
+            <font-awesome-icon icon="times-circle" />
+        </div>
     <div ref="keymap" v-show="showMapPanel" id="keymap"></div>
     </div>
 </template>
@@ -14,7 +13,7 @@
 <style scoped>
 
 #keymap_panel {
-  z-index: 1000;
+  z-index: 000;
 }
 
 #keymap {
@@ -25,6 +24,7 @@
   width: 200px;
   height: 200px;
   z-index: 1002;
+  color: #f1f1f1;
 }
 
 /* Style the button that is used to open and close the collapsible content */
@@ -319,7 +319,8 @@ export default {
             const context_extent = this.map_panel.getView().calculateExtent(this.map_panel.getSize())
             const llc = transform([context_extent[0], context_extent[1]], 'EPSG:3857', 'EPSG:4326')
             const urc = transform([context_extent[2], context_extent[3]], 'EPSG:3857', 'EPSG:4326')
-            const filters = format("as_geojson=true&amp;in_bbox=%%,%%,%%,%%",llc[0],llc[1],urc[0],urc[1])
+            //console.log(urc)
+            const filters = format("?as_geojson=true&amp;in_bbox=%%,%%,%%,%%",llc[0],llc[1],urc[0],urc[1])
             this.$parent.getItems('panoramas',filters).then(this.contextLoaded);
             this.$parent.getItems('image_objects',filters).then(this.mapSpotsLoaded);
         },
@@ -418,6 +419,7 @@ export default {
 
     keepFixture: function(fixture) {
         const update_url = this.$parent.backend+"/panoramas/" + this.pano.key + "/";
+        console.log(this.pano.x)
         const location_fix = proj4(this.utm_proj,"EPSG:4326").forward([this.pano.x + fixture.x, this.pano.y + fixture.y]);
         const component = this
         console.log("FIXING", fixture)

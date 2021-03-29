@@ -399,7 +399,8 @@ export default {
                         aggregate + chunk + (args[i] || ""), "");
             }
 
-           const filters = format("&dist=200&amp;point=%%,%%",this.pano_lon,this.pano_lat)
+           const filters = format("?dist=200&amp;point=%%,%%",this.pano_lon,this.pano_lat)
+           console.log(filters)
            this.$parent.getItems('panoramas',filters).then(this.otherPanosLoaded);
      },
 
@@ -418,7 +419,7 @@ export default {
         for (var i = 0; i < other_panos_data["count"]; i++) { // (var item in context_data["results"])
             const item = other_panos_data["results"][i]
             let op_geometry = new THREE.CircleGeometry( 1, 32 );
-            let op_location = new THREE.Mesh( op_geometry, this.other_panos_material );
+            let op_location = new THREE.Mesh( op_geometry, other_panos_material );
             op_location.rotation.x = -Math.PI / 2;
             op_location.position.set(-(this.utm_y - item.utm_y), -this.height_from_ground, -(this.utm_x - item.utm_x))
             op_location.ws_type = 'other pano'
